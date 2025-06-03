@@ -50,7 +50,7 @@ import pygame
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-D", "--dir", help="Directory to save log files", required=True)
+parser.add_argument("-D", "--dir", help="Directory to save log files", default="./")
 parser.add_argument("-F", "--filenames", help="File containing scan names", default="scan_filenames.csv")
 args = parser.parse_args()
 log_dir = args.dir
