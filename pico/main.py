@@ -5,6 +5,7 @@ from machine import Pin, I2C
 from bno055 import BNO055
 from quadrature import Quadrature
 
+time.sleep(5)
 # === I2C IMU Setup ===
 i2c = I2C(0, scl=Pin(1), sda=Pin(0))
 imu = BNO055(i2c)
