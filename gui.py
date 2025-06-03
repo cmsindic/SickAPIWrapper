@@ -126,7 +126,7 @@ def serial_logger(pico_path, port="/dev/ttyACM0", baudrate=115200):
 		ser = serial.Serial(port, baudrate, timeout=1)
 		
 		# Setting up to append to output pico file.
-		with open(pico_path, 'a') as f_pico:
+		with open(pico_path, 'w') as f_pico:
 			
 			# Do while not telling program to stop.
 			while not stop_event.is_set():
@@ -190,7 +190,7 @@ def lidar_logger(file_path):
 	lidar_buffer = []
 
 	# While appending output to output file...
-	with open(file_path, 'a') as f:
+	with open(file_path, 'w') as f:
 		
 		# If user hasn't stopped collection...
 		while not stop_event.is_set():
@@ -223,13 +223,14 @@ def lidar_logger(file_path):
 					lidar_data = [corrected_time, phi, theta[i], dist[i], rssi[i]]
 					log_line_buffered(lidar_buffer, lidar_data, f, max_size=50)
 
-def get_scan_name():
-	"""Returns the next unused auto-generated scan name."""
+def get_scan_name(listbox):
+	"""Returns the next unused auto-generated scan name.
+    """
 	idx = 1
 	while True:
 		name = f"scan_{idx:03d}"
 		pico_path = os.path.join(log_dir, f"{name}_pico.csv")
-		if not os.path.exists(pico_path):
+		if not name in listbox.get(0, tk.END):
 			return name
 		idx += 1
 
@@ -277,21 +278,25 @@ root.attributes("-fullscreen", True)
 font_big = tkFont.Font(family='Helvetica', size=36, weight='bold')
 font_med = tkFont.Font(family='Helvetica', size=24, weight='bold')
 
-label = tk.Label(root, text="", font=font_big, fg="blue")
-label.pack(pady=40)
+blank_label = tk.Label(root, text="", font=font_big, fg="blue")
+blank_label.pack(pady=10)
 
 label = tk.Label(root, text="Counter: 0", font=font_big, fg="blue")
-label.pack(pady=20)
+label.pack(pady=10)
 
 file_label = tk.Label(root, text="Not logging.", font=font_big, fg="blue")
 file_label.pack(pady=10)
+
+blank_label = tk.Label(root, text="", font=font_big, fg="blue")
+blank_label.pack(pady=5)
+
 
 cwd = os.path.split(os.getcwd())[-1]
 dir_text = os.path.join(cwd, log_dir)
 cwd_label = tk.Label(root, text=f"Directory: {dir_text}", font=font_med, fg="red")
 cwd_label.pack(pady=5)
 
-file_listbox = Listbox(root, font=font_med, width=30)
+file_listbox = Listbox(root, font=font_big, width=30)
 file_listbox.pack(pady=10)
 
 scan_names = load_scan_names()
@@ -331,7 +336,7 @@ def toggle_logging():
 			if index < len(scan_names):
 				custom_names_used = max(custom_names_used, index + 1)
 		else:
-			base = get_scan_name()
+			base = get_scan_name(file_listbox)
 			index = file_listbox.size() - 1  # select last item (e.g. Additional Scans)
 
 		with encoder_val.get_lock():
@@ -370,7 +375,7 @@ def toggle_logging():
 		if selected and selected[0] < file_listbox.size() - 1:
 			next_index = selected[0] + 1
 		else:
-			base = get_scan_name()
+			base = get_scan_name(file_listbox)
 			file_listbox.insert(tk.END, base)
 			next_index = file_listbox.size() - 1
 
