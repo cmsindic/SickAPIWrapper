@@ -47,21 +47,29 @@ from scansegmentapi.udp_handler import UDPHandler
 import scansegmentapi.msgpack as MSGPACKApi
 from multiprocessing import Value
 from datetime import date
-import pygame
+import pygame; pygame.mixer.init()
 import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-D", "--dir", help="Directory to save log files", default=str(date.today()).replace('-','_'))
-parser.add_argument("-F", "--filenames", help="File containing scan names", default="scan_filenames.csv")
-args = parser.parse_args()
-log_dir = args.dir
-os.makedirs(log_dir, exist_ok=True)
 
-pygame.mixer.init()
-
+CURRENT_DIRECTORY = os.path.split(os.getcwd())[-1]
 IP = "192.168.0.11"
 PORT = 2115
 BUFFER = 65535
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-D", "--dir",
+    help="Directory to save log files",
+    default=str(date.today()).replace('-','_')
+    )
+parser.add_argument(
+    "-F", "--filenames",
+    help="File containing scan names",
+    default=CURRENT_DIRECTORY + ".csv"
+    )
+args = parser.parse_args()
+log_dir = args.dir
+os.makedirs(log_dir, exist_ok=True)
 
 encoder_val = Value("i", 0)
 stop_event = threading.Event()
@@ -291,8 +299,7 @@ blank_label = tk.Label(root, text="", font=font_big, fg="blue")
 blank_label.pack(pady=5)
 
 
-cwd = os.path.split(os.getcwd())[-1]
-dir_text = os.path.join(cwd, log_dir)
+dir_text = os.path.join(CURRENT_DIRECTORY, log_dir)
 cwd_label = tk.Label(root, text=f"Directory: {dir_text}", font=font_med, fg="red")
 cwd_label.pack(pady=5)
 
