@@ -1,0 +1,7 @@
+.program quadrature
+.wrap_target
+    wait 1 pin 0
+    in pins, 2
+    push block
+.wrap
+
