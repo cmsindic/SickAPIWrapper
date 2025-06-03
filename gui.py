@@ -292,6 +292,9 @@ font_med = tkFont.Font(family='Helvetica', size=24)
 label = tk.Label(root, text="Counter: 0", font=font_big)
 label.pack(pady=20)
 
+cwd_label = tk.Label(root, text=f"Directory: {os.path.abspath(log_dir)}", font=font_med, fg="gray")
+cwd_label.pack(pady=5)
+
 file_label = tk.Label(root, text="Not logging.", font=font_med, fg="blue")
 file_label.pack(pady=10)
 
