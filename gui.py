@@ -46,11 +46,12 @@ from tkinter import Listbox, Scrollbar
 from scansegmentapi.udp_handler import UDPHandler
 import scansegmentapi.msgpack as MSGPACKApi
 from multiprocessing import Value
+from datetime import date
 import pygame
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-D", "--dir", help="Directory to save log files", default="./")
+parser.add_argument("-D", "--dir", help="Directory to save log files", default=str(date.today()).replace('-','_'))
 parser.add_argument("-F", "--filenames", help="File containing scan names", default="scan_filenames.csv")
 args = parser.parse_args()
 log_dir = args.dir
