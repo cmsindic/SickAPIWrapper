@@ -1,3 +1,8 @@
+""" May not need to be used. Takes scans made using the default scan filenames list 
+and converts the filenames to those of your choosing.
+"""
+
+
 import os
 import argparse
 
