@@ -285,7 +285,7 @@ def load_scan_names():
 
 root = tk.Tk()
 root.title("Scan Logger")
-root.geometry("1000x700")
+root.attributes("-fullscreen", True)
 font_big = tkFont.Font(family='Helvetica', size=36, weight='bold')
 font_med = tkFont.Font(family='Helvetica', size=24)
 
