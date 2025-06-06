@@ -46,7 +46,7 @@ def _to_cartesian(phi, theta, d):
 	x = d * np.cos(phi) * np.sin(theta)
 	y = d * np.cos(phi) * np.cos(theta)
 	z = -d * np.sin(phi)
-	return np.stack([-x, -y, z], axis=-1)  # Flip x, y, rot function later flips back
+	return np.stack([x, -y, z], axis=-1)  # Flip y, rot function later flips back
 
 def match_pico_times(lidar_T, pico_T):
 	""" Get lidar and pico frames with (nearly) matching 
@@ -86,7 +86,7 @@ def inclusive_range(a, b, step=1):
 		return range(a, b - 1, step)
 
 def load_csv(path, cols, dtypes=None):
-	""" Loads a csv... ¯\_(ツ)_/¯
+	""" Loads a csv... 
 	"""
 	try:
 		return pd.read_csv(path, names=cols, dtype=dtypes, usecols=range(len(cols)))
@@ -146,7 +146,7 @@ class Plot:
 		"""
 		r1, r2 = row_options
 		left, right = x < 0, x >= 0
-		if direction == 'up':
+		if direction == 'down':
 			return (left & (self.row == r2)) | (right & (self.row == r1))
 		else:
 			return (left & (self.row == r1)) | (right & (self.row == r2))
@@ -237,7 +237,7 @@ def process_scan(scan):
 	# Assign points to plots and save
 	for p in plots:
 		z_mask = p.range_match(data[:, 2])
-		x_mask = np.ones_like(z_mask, dtype=bool) if adtnl else p.row_match(data[:, 0], direction, row_options)
+		x_mask = p.row_match(data[:, 0], direction, row_options)
 		p.cloud = data[z_mask & x_mask]
 		#print(f"Writing data to {p.name}")
 		p.write()
